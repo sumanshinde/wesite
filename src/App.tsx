@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import axios from 'axios';
-import { Home, Compass, MapPin, CreditCard, Box, Settings, ShieldAlert, CheckCircle2, Menu, X, WashingMachine, Settings2, Refrigerator, Microwave, ChevronLeft, Calendar, User, Phone, Mail, Lock, AlertCircle, ShieldCheck, Search, MoreVertical, Check, Loader2, QrCode, Smartphone } from 'lucide-react';
+import { Home, Compass, MapPin, CreditCard, Box, Settings, ShieldAlert, CheckCircle2, Menu, X, WashingMachine, Settings2, Refrigerator, Microwave, ChevronLeft, Calendar, User, Phone, Mail, Lock, AlertCircle, ShieldCheck, Search, MoreVertical, Check, Loader2, QrCode, Smartphone, Star, Zap, MessageCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import LandingPage from './LandingPage';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5001/api',
+  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5001/api',
   withCredentials: true
 });
 
@@ -53,12 +53,15 @@ const Badge = ({ children, variant = 'default' }: { children: React.ReactNode, v
 }
 
 const StatCard = ({ title, value, icon, trend }: { title: string, value: string, icon: React.ReactNode, trend?: string }) => (
-  <Card className="p-5 flex flex-col gap-4 group cursor-default">
+  <Card className="p-6 flex flex-col gap-4 group cursor-default shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_10px_30px_rgba(0,0,0,0.08)] transition-all bg-white border-0 ring-1 ring-slate-100">
     <div className="flex justify-between items-start">
-      <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">{icon}</div>
-      {trend && <Badge variant="success">{trend}</Badge>}
+      <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform group-hover:bg-blue-600 group-hover:text-white shadow-sm ring-1 ring-blue-100/50">{icon}</div>
+      {trend && <div className="flex items-center gap-1 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-black ring-1 ring-emerald-100 uppercase tracking-widest leading-none"><Check size={14} strokeWidth={3}/> {trend}</div>}
     </div>
-    <div><p className="text-slate-500 text-sm font-medium">{title}</p><h3 className="text-2xl font-bold text-slate-900">{value}</h3></div>
+    <div>
+      <p className="text-slate-400 text-xs font-black uppercase tracking-widest mb-1">{title}</p>
+      <h3 className="text-3xl font-black text-slate-900 tracking-tight">{value}</h3>
+    </div>
   </Card>
 );
 
@@ -250,16 +253,17 @@ const DashboardPage = ({ user, navigate }: { user: any; navigate: (p: string) =>
           </Card>
         </div>
         <div>
-          <Title className="text-xl mb-4">Support & Info</Title>
-          <Card className="flex flex-col gap-1 p-2">
+          <Title className="text-xl mb-4 font-black flex items-center gap-2 tracking-tight"><ShieldCheck className="text-blue-600" size={24}/> Trust & Support</Title>
+          <Card className="flex flex-col gap-1 p-2 bg-white/50 backdrop-blur-sm border-slate-100 shadow-sm">
             {[
-              {icon: <CheckCircle2 className="text-emerald-500"/>, title: "Booking Process", desc: "Technician visits in the selected slot."},
-              {icon: <ShieldCheck className="text-blue-500"/>, title: "Secure Payments", desc: "UPI and Card payments supported."},
-              {icon: <Phone className="text-slate-500"/>, title: "Contact Support", desc: "+91 800 123 4567"},
+              {icon: <Star className="text-amber-500 fill-amber-500"/>, title: "4.8/5 Rated Expert", desc: "Based on 5000+ happy customers."},
+              {icon: <Zap className="text-blue-500 fill-blue-50"/>, title: "Same Day Repair", desc: "Available for all bookings before 2 PM."},
+              {icon: <CheckCircle2 className="text-emerald-500"/>, title: "Genuine Parts", desc: "Standard 30-day warranty included."},
+              {icon: <Phone className="text-slate-500"/>, title: "24/7 Support", desc: "+91 800 123 4567"},
             ].map((n, i) => (
-              <div key={i} className="flex gap-4 p-3 hover:bg-slate-50 rounded-xl cursor-default transition-colors">
-                <div className="mt-1 bg-white shadow-sm p-1.5 rounded-full h-fit border border-slate-100">{n.icon}</div>
-                <div><p className="font-bold text-slate-800 text-sm">{n.title}</p><p className="text-slate-500 text-xs mt-0.5">{n.desc}</p></div>
+              <div key={i} className="flex gap-4 p-4 hover:bg-white rounded-2xl cursor-default transition-all hover:shadow-sm border border-transparent hover:border-slate-100 group">
+                <div className="mt-0.5 bg-white shadow-sm p-2 rounded-xl h-fit border border-slate-100 group-hover:scale-110 transition-transform">{n.icon}</div>
+                <div><p className="font-extrabold text-slate-900 text-sm">{n.title}</p><p className="text-slate-400 text-xs mt-0.5 font-medium">{n.desc}</p></div>
               </div>
             ))}
           </Card>
@@ -344,7 +348,8 @@ const ServicesBookingPage = ({ navigate }: { navigate: (p: string) => void }) =>
          )}
       </div>
 
-      <div className="w-full bg-white/80 backdrop-blur-xl rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-slate-900/5 p-6 md:p-10">
+       <div className="w-full bg-white rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.06)] border border-slate-100 p-6 md:p-10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-[100px] -z-10 group-hover:w-40 transition-all"></div>
         <AnimatePresence mode="wait">
           <motion.div key={`step-${step}`} initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }} transition={{ type: 'tween', duration: 0.3 }}>
             {step === 4 ? (
@@ -990,6 +995,16 @@ export default function App() {
              <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
         </main>
+      </div>
+
+      {/* Floating Buttons */}
+      <div className="fixed bottom-6 right-6 z-[100] flex flex-col gap-3">
+        <a href="https://wa.me/918001234567" target="_blank" rel="noreferrer" className="w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:scale-110 active:scale-95 transition-all outline-none ring-offset-2 focus:ring-4 focus:ring-[#25D366]/20">
+          <MessageCircle size={28} />
+        </a>
+        <a href="tel:8001234567" className="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,99,235,0.4)] hover:scale-110 active:scale-95 transition-all outline-none ring-offset-2 focus:ring-4 focus:ring-blue-600/20">
+          <Phone size={24} />
+        </a>
       </div>
     </div>
   );

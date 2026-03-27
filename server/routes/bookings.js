@@ -18,6 +18,18 @@ router.post('/', auth, async (req, res) => {
   }
 });
 
+// Create a guest booking
+router.post('/guest', async (req, res) => {
+  try {
+    const booking = new Booking(req.body);
+    await booking.save();
+    res.status(201).json({ message: 'Guest booking successful!', booking });
+  } catch (error) {
+    console.error('Guest Booking Error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 // List all bookings (Admin only)
 router.get('/all', auth, admin, async (req, res) => {
   try {
